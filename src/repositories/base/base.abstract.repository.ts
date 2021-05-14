@@ -1,14 +1,16 @@
-import { DeleteResult, Repository } from "typeorm";
+import { Logger } from "@nestjs/common";
+import { OldCeshtjet } from "src/resources/old-ceshtjet/entity/old-ceshtje.entity";
+import { DeleteResult, FindConditions, ObjectID, Repository, UpdateResult } from "typeorm";
 import { BaseInterfaceRepository } from "./base.interface.repository";
 
 export class BaseAbstractRepository<T> implements BaseInterfaceRepository<T> {
     private entity: Repository<T>;
-
+    
     protected constructor(entity: Repository<T>) {
         this.entity = entity;
     }
-
-    public async create(data: T | any): Promise<T> {
+    
+    public async save(data: T | any): Promise<T> {
         return await this.entity.save(data);
     }
 
