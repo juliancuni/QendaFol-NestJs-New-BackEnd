@@ -9,8 +9,8 @@ export class BaseAbstractRepository<T> implements BaseInterfaceRepository<T> {
     protected constructor(entity: Repository<T>) {
         this.entity = entity;
     }
-    
-    public async save(data: T | any): Promise<T> {
+        
+    public async create(data: T | any): Promise<T> {
         return await this.entity.save(data);
     }
 
@@ -32,5 +32,9 @@ export class BaseAbstractRepository<T> implements BaseInterfaceRepository<T> {
 
     public async remove(id: string): Promise<DeleteResult> {
         return await this.entity.delete(id);
+    }
+
+    public async update(oldCeshtje: OldCeshtjet): Promise<UpdateResult> {
+       return await this.entity.update(oldCeshtje.id, oldCeshtje as any);
     }
 }

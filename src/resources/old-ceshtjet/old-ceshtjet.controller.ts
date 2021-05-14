@@ -26,16 +26,13 @@ export class OldCeshtjetController {
         return await this._oldCeshtjetService.create(oldCeshtjetDto);
     }
 
-    @Patch(':id')
-    public async updateOne(@Param(':id') id: string, @Body() oldCeshtje: any): Promise<UpdateResult> {
-        
-        return null;
+    @Patch('update')
+    public async updateOne(@Body() oldCeshtje: any): Promise<UpdateResult> {
+        return this._oldCeshtjetService.update(oldCeshtje);
     }
 
     @Delete()
-    public async remove(@Body('id') id: string): Promise<DeleteResult> {
-        const result = await this._oldCeshtjetService.findOneById(id);
-        if (result) this._oldCeshtjetService.remove(id);
-        throw new NotFoundException("Nuk gjendet asnje rekord");
+    public async remove(@Body('id') id: any): Promise<DeleteResult> {
+        return await this._oldCeshtjetService.remove(id);
     }
 }
