@@ -9,11 +9,13 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CreateOldCeshtjeDto } from './dto/create-old-ceshtjet.dto';
 import { OldCeshtjet } from './entity/old-ceshtje.entity';
 import { OldCeshtjetServiceInterface } from './interface/old-ceshtjet.service.interface';
 
+@ApiTags('old-ceshtjet')
 @Controller('old-ceshtjet')
 export class OldCeshtjetController {
   constructor(
@@ -49,8 +51,8 @@ export class OldCeshtjetController {
   }
 
   @Patch('update')
-  public async updateOne(@Body() oldCeshtje: any): Promise<UpdateResult> {
-    return this._oldCeshtjetService.update(oldCeshtje);
+  public async updateOne(@Body() oldCeshtje: CreateOldCeshtjeDto): Promise<UpdateResult> {
+    return this._oldCeshtjetService.update(oldCeshtje as any);
   }
 
   @Delete()

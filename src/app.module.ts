@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ormConfig } from './database/config/ormconfig';
 import { OldCeshtjetModule } from './resources/old-ceshtjet/old-ceshtjet.module';
 
@@ -12,7 +10,7 @@ import { OldCeshtjetModule } from './resources/old-ceshtjet/old-ceshtjet.module'
     TypeOrmModule.forRoot(ormConfig()),
     OldCeshtjetModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
-export class AppModule {}
+export class AppModule { }

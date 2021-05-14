@@ -2,7 +2,7 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateOldCeshtjeDto {
   @IsNotEmpty()
-  emri: string;
+  readonly emri: string;
   @IsNotEmpty()
-  mbiemri: string;
+  readonly mbiemri: string;
 }
