@@ -8,15 +8,11 @@ import { OldCeshtjetModule } from './resources/old-ceshtjet/old-ceshtjet.module'
 
 @Module({
   imports: [
-    ConfigModule.forRoot({isGlobal: true}),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot(ormConfig()),
     OldCeshtjetModule,
   ],
-  controllers: [
-    AppController,
-  ],
-  providers: [
-    AppService
-  ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

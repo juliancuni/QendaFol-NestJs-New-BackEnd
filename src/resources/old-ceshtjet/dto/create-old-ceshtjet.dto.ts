@@ -1,9 +1,8 @@
-import { IsNotEmpty, MinLength } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 export class CreateOldCeshtjeDto {
-    @IsNotEmpty()
-    emri: string;
-    @IsNotEmpty()
-    mbiemri: string;
-
+  @IsNotEmpty()
+  emri: string;
+  @IsNotEmpty()
+  mbiemri: string;
 }

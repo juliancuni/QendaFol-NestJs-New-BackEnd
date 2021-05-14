@@ -1,40 +1,39 @@
-import { Logger } from "@nestjs/common";
-import { OldCeshtjet } from "src/resources/old-ceshtjet/entity/old-ceshtje.entity";
-import { DeleteResult, FindConditions, ObjectID, Repository, UpdateResult } from "typeorm";
-import { BaseInterfaceRepository } from "./base.interface.repository";
+import { OldCeshtjet } from 'src/resources/old-ceshtjet/entity/old-ceshtje.entity';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { BaseInterfaceRepository } from './base.interface.repository';
 
 export class BaseAbstractRepository<T> implements BaseInterfaceRepository<T> {
-    private entity: Repository<T>;
-    
-    protected constructor(entity: Repository<T>) {
-        this.entity = entity;
-    }
-        
-    public async create(data: T | any): Promise<T> {
-        return await this.entity.save(data);
-    }
+  private entity: Repository<T>;
 
-    public async findOneById(id: string): Promise<T> {
-        return await this.entity.findOne(id);
-    }
+  protected constructor(entity: Repository<T>) {
+    this.entity = entity;
+  }
 
-    public async findByCondition(filterCondition: any): Promise<T[]> {
-        return await this.entity.find({ where: filterCondition });
-    }
+  public async create(data: T | any): Promise<T> {
+    return await this.entity.save(data);
+  }
 
-    public async findWithRelations(relations: any): Promise<T[]> {
-        return await this.entity.find(relations);
-    }
+  public async findOneById(id: string): Promise<T> {
+    return await this.entity.findOne(id);
+  }
 
-    public async findAll(): Promise<T[]> {
-        return await this.entity.find();
-    }
+  public async findByCondition(filterCondition: any): Promise<T[]> {
+    return await this.entity.find({ where: filterCondition });
+  }
 
-    public async remove(id: string): Promise<DeleteResult> {
-        return await this.entity.delete(id);
-    }
+  public async findWithRelations(relations: any): Promise<T[]> {
+    return await this.entity.find(relations);
+  }
 
-    public async update(oldCeshtje: OldCeshtjet): Promise<UpdateResult> {
-       return await this.entity.update(oldCeshtje.id, oldCeshtje as any);
-    }
+  public async findAll(): Promise<T[]> {
+    return await this.entity.find();
+  }
+
+  public async remove(id: string): Promise<DeleteResult> {
+    return await this.entity.delete(id);
+  }
+
+  public async update(oldCeshtje: OldCeshtjet): Promise<UpdateResult> {
+    return await this.entity.update(oldCeshtje.id, oldCeshtje as any);
+  }
 }

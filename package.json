@@ -1,8 +1,8 @@
 {
   "name": "qf-nest-api",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "version": "0.1.0",
+  "description": "Qendra Fol Api",
+  "author": "Julian Çuni",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
