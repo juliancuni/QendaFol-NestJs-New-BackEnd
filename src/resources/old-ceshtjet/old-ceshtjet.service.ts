@@ -9,7 +9,7 @@ import { OldCeshtjetServiceInterface } from "./interface/old-ceshtjet.service.in
 export class OldCeshtjetService implements OldCeshtjetServiceInterface {
     private readonly logger = new Logger(OldCeshtjetService.name);
     constructor(@Inject('OldCeshtjetRepositoryInterface') private readonly _oldCeshtjetRepository: OldCeshtjetRepositoryInterface) { }
-   
+
     findByCondition(filterCondition: any): Promise<OldCeshtjet[]> {
         throw new Error("Method not implemented.");
     }
@@ -34,10 +34,6 @@ export class OldCeshtjetService implements OldCeshtjetServiceInterface {
     }
 
     public async remove(id: string): Promise<DeleteResult> {
-        const result = await this._oldCeshtjetRepository.remove(id);
-        console.log(result);
-        return result;
+        return await this._oldCeshtjetRepository.remove(id);
     }
-
-
 }

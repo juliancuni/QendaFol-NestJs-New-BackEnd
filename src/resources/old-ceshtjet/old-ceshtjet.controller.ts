@@ -16,9 +16,17 @@ export class OldCeshtjetController {
 
     @Get(':id')
     public async findOneById(@Param('id') id: string) {
-        const result = await this._oldCeshtjetService.findOneById(id);
-        if (result) return result;
-        throw new NotFoundException("Nuk gjendet asnje rekord findbyid");
+        let result;
+        try {
+            result = await this._oldCeshtjetService.findOneById(id);
+        } catch (error) {
+            throw new NotFoundException("Nuk gjendet asnje rekord");
+        }
+        if (result) {
+            return result;
+        };
+
+        throw new NotFoundException("Nuk gjendet asnje rekord");
     }
 
     @Post()
@@ -33,6 +41,12 @@ export class OldCeshtjetController {
 
     @Delete()
     public async remove(@Body('id') id: any): Promise<DeleteResult> {
-        return await this._oldCeshtjetService.remove(id);
+        let result;
+        try {
+            result = await this._oldCeshtjetService.remove(id);
+        } catch (error) {
+            throw new NotFoundException("Nuk u fshi asnje rekord");
+        }
+        return result;
     }
 }
