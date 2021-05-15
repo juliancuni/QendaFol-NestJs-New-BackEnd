@@ -21,7 +21,7 @@ import { APP_GUARD } from '@nestjs/core';
       realm: 'qendrafol',
       clientId: 'qendrafol-api',
       secret: 'bca0a105-e14f-4d6b-846d-9240feac13fb',
-      logLevels: ['verbose']
+      logLevels: [process.env.NODE_ENV === 'development' ? 'debug' : 'error'],
     }),
   ],
   controllers: [],
@@ -37,7 +37,7 @@ import { APP_GUARD } from '@nestjs/core';
       useClass: AuthGuard,
     },
     // This adds a global level resource guard, which is permissive.
-    // Only controllers annotated with @Resource and 
+    // Only controllers annotated with @Resource and
     // methods with @Scopes
     // are handled by this guard.
     {
@@ -46,7 +46,7 @@ import { APP_GUARD } from '@nestjs/core';
     },
     // New in 1.1.0
     // This adds a global level role guard, which is permissive.
-    // Used by `@Roles` decorator with the 
+    // Used by `@Roles` decorator with the
     // optional `@AllowAnyRole` decorator for allowing any
     // specified role passed.
     {
@@ -55,4 +55,4 @@ import { APP_GUARD } from '@nestjs/core';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}
