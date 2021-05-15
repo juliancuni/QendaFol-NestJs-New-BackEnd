@@ -18,26 +18,27 @@ import {
 } from 'nest-keycloak-connect';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { OldCeshtjeDto } from './dto/create-old-ceshtjet.dto';
-import { OldCeshtjet } from './entity/old-ceshtje.entity';
+// import { OldCeshtjet } from './entity/old-ceshtje.entity';
 import { OldCeshtjetServiceInterface } from './interface/old-ceshtjet.service.interface';
 
 @ApiTags('old-ceshtjet')
 @Controller('old-ceshtjet')
-@Resource('old-ceshtjet')
+// @Resource('old-ceshtjet')
 export class OldCeshtjetController {
   constructor(
     @Inject('OldCeshtjetServiceInterface')
     private readonly _oldCeshtjetService: OldCeshtjetServiceInterface,
     private readonly _httpService: HttpService,
-  ) {}
+  ) { }
 
   @Get()
   @Unprotected()
-  public async findAll(): Promise<OldCeshtjet[]> {
+  public async findAll(): Promise<OldCeshtjeDto[]> {
     return await this._oldCeshtjetService.findAll();
   }
   @Get(':id')
-  @ApiBearerAuth('access-token')
+  //@ApiBearerAuth('access-token')
+  @Unprotected()
   @Scopes('View')
   public async findOneById(@Param('id') id: string) {
     let result;
@@ -53,22 +54,25 @@ export class OldCeshtjetController {
     throw new NotFoundException('Nuk gjendet asnje rekord');
   }
   @Post()
-  @ApiBearerAuth('access-token')
+  //@ApiBearerAuth('access-token')
+  @Unprotected()
   public async create(
     @Body() oldCeshtjetDto: OldCeshtjeDto,
-  ): Promise<OldCeshtjet> {
+  ): Promise<OldCeshtjeDto> {
     return await this._oldCeshtjetService.create(oldCeshtjetDto);
   }
   @Patch('update')
-  @ApiBearerAuth('access-token')
+  //@ApiBearerAuth('access-token')
+  @Unprotected()
   public async updateOne(
     @Body() oldCeshtje: OldCeshtjeDto,
   ): Promise<UpdateResult> {
     return this._oldCeshtjetService.update(oldCeshtje as any);
   }
-  @Delete()
-  @ApiBearerAuth('access-token')
-  public async remove(@Body('id') id: any): Promise<DeleteResult> {
+  @Delete(':id')
+  //@ApiBearerAuth('access-token')
+  @Unprotected()
+  public async remove(@Param('id') id: string): Promise<DeleteResult> {
     let result;
     try {
       result = await this._oldCeshtjetService.remove(id);
@@ -77,6 +81,9 @@ export class OldCeshtjetController {
     }
     return result;
   }
+
+
+
   @Post('login/:username/:password')
   @Unprotected()
   public async loginToKeyCloak(
@@ -106,9 +113,6 @@ export class OldCeshtjetController {
     const response = await this._httpService
       .post(tokenUrl, formBodyEncodedString, config)
       .toPromise();
-    return response.data.access_token;
-    // response.subscribe((res) => {
-    //   console.log(res);
-    // }, (err) => console.log("EEEEEERRRRRROOOOOOOOOORRRRRRRRr", err))
+    return response.data;
   }
 }
