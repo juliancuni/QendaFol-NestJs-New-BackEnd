@@ -4,7 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { logger: console });
+  const app = await NestFactory.create(AppModule, { logger: ["verbose"] });
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('api/v1');
   const port = parseInt(process.env.SERVER_PORT);
@@ -14,7 +14,14 @@ async function bootstrap() {
     .setDescription("Api per administrimin e ceshtjeve penale")
     .setContact("Julian Çuni", "http://microservices.al", "julian.cuni@microservices.al")
     .setVersion("0.1.0")
-    .addBearerAuth()
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT'
+      },
+      'access-token',
+    )
     .build();
 
   const doc = SwaggerModule.createDocument(app, swaggerConfig);

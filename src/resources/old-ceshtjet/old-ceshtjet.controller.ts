@@ -3,33 +3,39 @@ import {
   Controller,
   Delete,
   Get,
+  HttpService,
   Inject,
   NotFoundException,
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard, Resource, Unprotected, Scopes } from 'nest-keycloak-connect';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { OldCeshtjeDto } from './dto/create-old-ceshtjet.dto';
 import { OldCeshtjet } from './entity/old-ceshtje.entity';
 import { OldCeshtjetServiceInterface } from './interface/old-ceshtjet.service.interface';
 
-
 @ApiTags('old-ceshtjet')
 @Controller('old-ceshtjet')
+@Resource('old-ceshtjet')
 export class OldCeshtjetController {
   constructor(
     @Inject('OldCeshtjetServiceInterface')
     private readonly _oldCeshtjetService: OldCeshtjetServiceInterface,
-  ) {}
+    private readonly _httpService: HttpService
+  ) { }
 
   @Get()
+  @Unprotected()
   public async findAll(): Promise<OldCeshtjet[]> {
     return await this._oldCeshtjetService.findAll();
   }
-
   @Get(':id')
+  @ApiBearerAuth('access-token')
+  @Scopes('View')
   public async findOneById(@Param('id') id: string) {
     let result;
     try {
@@ -43,20 +49,20 @@ export class OldCeshtjetController {
 
     throw new NotFoundException('Nuk gjendet asnje rekord');
   }
-  @ApiBearerAuth()
   @Post()
+  @ApiBearerAuth('access-token')
   public async create(
     @Body() oldCeshtjetDto: OldCeshtjeDto,
   ): Promise<OldCeshtjet> {
     return await this._oldCeshtjetService.create(oldCeshtjetDto);
   }
-  @ApiBearerAuth()
   @Patch('update')
+  @ApiBearerAuth('access-token')
   public async updateOne(@Body() oldCeshtje: OldCeshtjeDto): Promise<UpdateResult> {
     return this._oldCeshtjetService.update(oldCeshtje as any);
   }
-  @ApiBearerAuth()
   @Delete()
+  @ApiBearerAuth('access-token')
   public async remove(@Body('id') id: any): Promise<DeleteResult> {
     let result;
     try {
@@ -65,5 +71,33 @@ export class OldCeshtjetController {
       throw new NotFoundException('Nuk u fshi asnje rekord');
     }
     return result;
+  }
+  @Post('login/:username/:password')
+  @Unprotected()
+  public async loginToKeyCloak(@Param('username') username: string, @Param('password') password: string) {
+    const tokenUrl = "http://localhost:8080/auth/realms/qendrafol/protocol/openid-connect/token";
+    const body = {
+      client_id: "qendrafol-webapp",
+      username: username,
+      password: password,
+      grant_type: "password"
+    };
+    const config = {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }
+    let formBodyEncoded = []
+    for(const prop in body) {
+      const encodedKey = encodeURIComponent(prop);
+      const encodeBody = encodeURIComponent(body[prop]);
+      formBodyEncoded.push(encodedKey + "=" + encodeBody);
+    }
+    const formBodyEncodedString = formBodyEncoded.join("&");
+    const response = await this._httpService.post(tokenUrl, formBodyEncodedString, config).toPromise();
+    return response.data.access_token;
+    // response.subscribe((res) => {
+    //   console.log(res);
+    // }, (err) => console.log("EEEEEERRRRRROOOOOOOOOORRRRRRRRr", err))
   }
 }
