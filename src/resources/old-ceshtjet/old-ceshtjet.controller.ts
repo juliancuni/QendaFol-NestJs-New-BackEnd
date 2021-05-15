@@ -9,11 +9,12 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { CreateOldCeshtjeDto } from './dto/create-old-ceshtjet.dto';
+import { OldCeshtjeDto } from './dto/create-old-ceshtjet.dto';
 import { OldCeshtjet } from './entity/old-ceshtje.entity';
 import { OldCeshtjetServiceInterface } from './interface/old-ceshtjet.service.interface';
+
 
 @ApiTags('old-ceshtjet')
 @Controller('old-ceshtjet')
@@ -42,19 +43,19 @@ export class OldCeshtjetController {
 
     throw new NotFoundException('Nuk gjendet asnje rekord');
   }
-
+  @ApiBearerAuth()
   @Post()
   public async create(
-    @Body() oldCeshtjetDto: CreateOldCeshtjeDto,
+    @Body() oldCeshtjetDto: OldCeshtjeDto,
   ): Promise<OldCeshtjet> {
     return await this._oldCeshtjetService.create(oldCeshtjetDto);
   }
-
+  @ApiBearerAuth()
   @Patch('update')
-  public async updateOne(@Body() oldCeshtje: CreateOldCeshtjeDto): Promise<UpdateResult> {
+  public async updateOne(@Body() oldCeshtje: OldCeshtjeDto): Promise<UpdateResult> {
     return this._oldCeshtjetService.update(oldCeshtje as any);
   }
-
+  @ApiBearerAuth()
   @Delete()
   public async remove(@Body('id') id: any): Promise<DeleteResult> {
     let result;

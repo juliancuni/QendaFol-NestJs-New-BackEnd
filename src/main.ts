@@ -14,6 +14,7 @@ async function bootstrap() {
     .setDescription("Api per administrimin e ceshtjeve penale")
     .setContact("Julian Çuni", "http://microservices.al", "julian.cuni@microservices.al")
     .setVersion("0.1.0")
+    .addBearerAuth()
     .build();
 
   const doc = SwaggerModule.createDocument(app, swaggerConfig);
