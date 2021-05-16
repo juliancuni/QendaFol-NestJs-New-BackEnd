@@ -10,12 +10,15 @@ import {
   AuthGuard,
 } from 'nest-keycloak-connect';
 import { APP_GUARD } from '@nestjs/core';
+import { CeshtjetModule } from './resources/ceshtjet/ceshtjet.module';
+import { PersonatModule } from './resources/personat/personat.module';
+import { KategoriteModule } from './resources/kategorite/kategorite.module';
+import { KomentiModule } from './resources/komenti/komenti.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot(ormConfig()),
-    OldCeshtjetModule,
     KeycloakConnectModule.register({
       authServerUrl: 'http://localhost:8080/auth',
       realm: 'qendrafol',
@@ -23,6 +26,11 @@ import { APP_GUARD } from '@nestjs/core';
       secret: 'bca0a105-e14f-4d6b-846d-9240feac13fb',
       logLevels: [process.env.NODE_ENV === 'development' ? 'debug' : 'error'],
     }),
+    OldCeshtjetModule,
+    CeshtjetModule,
+    PersonatModule,
+    KategoriteModule,
+    KomentiModule,
   ],
   controllers: [],
   providers: [

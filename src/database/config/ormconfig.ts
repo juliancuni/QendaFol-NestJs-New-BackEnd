@@ -12,7 +12,7 @@ export function ormConfig(): any {
     useUnifiedTopology: true,
     useNewUrlParser: true,
     connectTimeout: parseInt(process.env.DATABASE_CONNECTION_TIME_OUT),
-    acquireTimeout: parseInt(process.env.DATABASE_ACQUIRE_TIME_OUT),
+    // acquireTimeout: parseInt(process.env.DATABASE_ACQUIRE_TIME_OUT),
     extra: {
       connectionLimit: parseInt(process.env.DATABASE_CONNECTION_LIMIT),
     },
