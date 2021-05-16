@@ -18,6 +18,7 @@ import {
 } from 'nest-keycloak-connect';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { OldCeshtjeDto } from './dto/create-old-ceshtjet.dto';
+import { OldCeshtjet } from './entity/old-ceshtje.entity';
 // import { OldCeshtjet } from './entity/old-ceshtje.entity';
 import { OldCeshtjetServiceInterface } from './interface/old-ceshtjet.service.interface';
 
@@ -81,8 +82,12 @@ export class OldCeshtjetController {
     }
     return result;
   }
-
-
+  //@ApiBearerAuth('access-token')
+  @Unprotected()
+  @Post('bulk')
+  public async bulkInsert(@Body() oldCeshtjet: OldCeshtjet[]) {
+    return this._oldCeshtjetService.bulk(oldCeshtjet);
+  }
 
   @Post('login/:username/:password')
   @Unprotected()

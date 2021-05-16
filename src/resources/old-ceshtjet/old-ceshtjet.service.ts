@@ -10,10 +10,10 @@ export class OldCeshtjetService implements OldCeshtjetServiceInterface {
   constructor(
     @Inject('OldCeshtjetRepositoryInterface')
     private readonly _oldCeshtjetRepository: OldCeshtjetRepositoryInterface,
-  ) {}
+  ) { }
 
-  findByCondition(filterCondition: any): Promise<OldCeshtjet[]> {
-    throw new Error('Method not implemented.');
+  public async findByCondition(filterCondition: any): Promise<OldCeshtjet[]> {
+    return this._oldCeshtjetRepository.findByCondition(filterCondition);
   }
   findWithRelations(relations: any): Promise<OldCeshtjet[]> {
     throw new Error('Method not implemented.');
@@ -37,5 +37,30 @@ export class OldCeshtjetService implements OldCeshtjetServiceInterface {
 
   public async remove(id: string): Promise<DeleteResult> {
     return await this._oldCeshtjetRepository.remove(id);
+  }
+
+  public async bulk(oldCeshtjet: OldCeshtjet[]): Promise<any> {
+
+    oldCeshtjet.forEach(async (oldCeshtje) => {
+      const exists = await this.checkIfExists(oldCeshtje);
+      let nrAdded = 0;
+      let nrNotAdded = 0;
+      if (!exists) {
+        const resultAded = this._oldCeshtjetRepository.create(oldCeshtje);
+        if (resultAded) {
+          nrAdded++;
+        } else {
+          nrNotAdded++;
+        }
+      }
+    })
+  }
+
+  private async checkIfExists(oldCeshtje: OldCeshtjet): Promise<boolean> {
+    const result = await this._oldCeshtjetRepository.findByCondition({
+      emri: oldCeshtje.emri,
+      mbiemri: oldCeshtje.mbiemri,
+    });
+    return result.length > 0;
   }
 }

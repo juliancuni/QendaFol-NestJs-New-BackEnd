@@ -10,4 +10,5 @@ export interface OldCeshtjetServiceInterface
   findAll(): Promise<OldCeshtjet[]>;
   remove(id: string): Promise<DeleteResult>;
   update(oldCeshtje: OldCeshtjet): Promise<UpdateResult>;
+  bulk(oldCeshtjet: OldCeshtjet[]): Promise<any>;
 }
