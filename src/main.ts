@@ -1,15 +1,17 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { json } from 'express';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger:
-      process.env.NODE_ENV === 'development' ? ['debug'] : ['warn', 'error'],
+    logger: (process.env.NODE_ENV === 'development') ? ['debug'] : ['warn', 'error'],
   });
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('api/v1');
+  app.enableCors();
+  app.use(json({limit: '1mb'}));
   const port = parseInt(process.env.SERVER_PORT);
 
   const swaggerConfig = new DocumentBuilder()
