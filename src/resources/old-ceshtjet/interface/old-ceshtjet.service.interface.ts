@@ -1,14 +1,15 @@
 import { BaseInterfaceRepository } from 'src/repositories/base/base.interface.repository';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { OldCeshtjeDto } from '../dto/create-old-ceshtjet.dto';
+import { BulkReportDto } from '../dto/bulk-report.dto';
+import { OldCeshtjeDto } from '../dto/old-ceshtjet.dto';
 import { OldCeshtjet } from '../entity/old-ceshtje.entity';
 
 export interface OldCeshtjetServiceInterface
   extends BaseInterfaceRepository<OldCeshtjet> {
-  create(oldCeshtjeDto: OldCeshtjeDto): Promise<OldCeshtjet>;
+  create(OldCeshtje: OldCeshtjet): Promise<OldCeshtjet>;
   findOneById(id: string): Promise<OldCeshtjet>;
   findAll(): Promise<OldCeshtjet[]>;
   remove(id: string): Promise<DeleteResult>;
   update(oldCeshtje: OldCeshtjet): Promise<UpdateResult>;
-  bulk(oldCeshtjet: OldCeshtjet[]): Promise<any>;
+  bulk(username: string, oldCeshtjet: OldCeshtjet[]): Promise<BulkReportDto>;
 }

@@ -9,6 +9,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import {
@@ -17,14 +18,16 @@ import {
   Scopes,
 } from 'nest-keycloak-connect';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { OldCeshtjeDto } from './dto/create-old-ceshtjet.dto';
+import { OldCeshtjeDto } from './dto/old-ceshtjet.dto';
 import { OldCeshtjet } from './entity/old-ceshtje.entity';
-// import { OldCeshtjet } from './entity/old-ceshtje.entity';
 import { OldCeshtjetServiceInterface } from './interface/old-ceshtjet.service.interface';
+import { Request } from 'express';
+import jwt_decode from "jwt-decode";
+import { BulkReportDto } from './dto/bulk-report.dto';
 
 @ApiTags('old-ceshtjet')
 @Controller('old-ceshtjet')
-// @Resource('old-ceshtjet')
+@Resource('old-ceshtjet')
 export class OldCeshtjetController {
   constructor(
     @Inject('OldCeshtjetServiceInterface')
@@ -33,13 +36,14 @@ export class OldCeshtjetController {
   ) { }
 
   @Get()
-  @Unprotected()
-  public async findAll(): Promise<OldCeshtjeDto[]> {
+  @ApiBearerAuth('access-token')
+  // @Unprotected()
+  public async findAll(): Promise<OldCeshtjet[]> {
     return await this._oldCeshtjetService.findAll();
   }
   @Get(':id')
-  //@ApiBearerAuth('access-token')
-  @Unprotected()
+  @ApiBearerAuth('access-token')
+  // @Unprotected()
   @Scopes('View')
   public async findOneById(@Param('id') id: string) {
     let result;
@@ -55,24 +59,24 @@ export class OldCeshtjetController {
     throw new NotFoundException('Nuk gjendet asnje rekord');
   }
   @Post()
-  //@ApiBearerAuth('access-token')
-  @Unprotected()
+  @ApiBearerAuth('access-token')
+  // @Unprotected()
   public async create(
     @Body() oldCeshtjetDto: OldCeshtjeDto,
-  ): Promise<OldCeshtjeDto> {
+  ): Promise<OldCeshtjet> {
     return await this._oldCeshtjetService.create(oldCeshtjetDto);
   }
   @Patch('update')
-  //@ApiBearerAuth('access-token')
-  @Unprotected()
+  @ApiBearerAuth('access-token')
+  // @Unprotected()
   public async updateOne(
     @Body() oldCeshtje: OldCeshtjeDto,
   ): Promise<UpdateResult> {
-    return this._oldCeshtjetService.update(oldCeshtje as any);
+    return this._oldCeshtjetService.update(oldCeshtje as OldCeshtjeDto  );
   }
   @Delete(':id')
-  //@ApiBearerAuth('access-token')
-  @Unprotected()
+  @ApiBearerAuth('access-token')
+  // @Unprotected()
   public async remove(@Param('id') id: string): Promise<DeleteResult> {
     let result;
     try {
@@ -82,11 +86,12 @@ export class OldCeshtjetController {
     }
     return result;
   }
-  //@ApiBearerAuth('access-token')
-  @Unprotected()
+  @ApiBearerAuth('access-token')
+  // @Unprotected()
   @Post('bulk')
-  public async bulkInsert(@Body() oldCeshtjet: OldCeshtjet[]) {
-    return this._oldCeshtjetService.bulk(oldCeshtjet);
+  public async bulkInsert(@Body() oldCeshtjet: OldCeshtjeDto[], @Req() request: Request): Promise<BulkReportDto> {
+    const username: string = jwt_decode(request.headers.authorization);
+    return this._oldCeshtjetService.bulk(username["preferred_username"], oldCeshtjet);
   }
 
   @Post('login/:username/:password')
