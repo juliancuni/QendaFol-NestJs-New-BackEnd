@@ -13,7 +13,7 @@ export class OldCeshtjet {
   @Column({ nullable: true }) data_e_ngjarjes: Date;
   @Column({ nullable: true }) kategoria: string;
   @Column({ nullable: true }) sipas_nenit: string;
-  @Column({ nullable: true, length: 11000 }) policia: string;
+  @Column("longtext", { nullable: true }) policia: string;
   @Column({ nullable: true }) prokuroria: string;
   @Column({ nullable: true }) sipas_nenit_p: string;
   @Column({ nullable: true }) masa_e_sigurisë_kërkuar_nga_prokurori: string;
@@ -39,5 +39,5 @@ export class OldCeshtjet {
   @Column({ nullable: true }) neni_gjl: string;
   @Column({ nullable: true }) masa_e_sigurisë_në_gjykatën_e_larte: string;
   @Column({ nullable: true }) data_mas_sig_gj_larte: Date;
-  @Column({ nullable: true, length: 4000 }) komente: string;
+  @Column("longtext", { nullable: true }) komente: string;
 }
