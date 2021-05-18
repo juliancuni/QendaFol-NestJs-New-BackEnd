@@ -45,7 +45,10 @@ export class OldCeshtjetService implements OldCeshtjetServiceInterface {
   public async bulk(username: string, oldCeshtjet: OldCeshtjeDto[]): Promise<BulkReportDto> {
     let bulkReportDto = new BulkReportDto();
     bulkReportDto.nrImportedSuccess = 0;
+    bulkReportDto.nrUpdatedSuccess = 0;
     bulkReportDto.nrImportedFailure = 0;
+    bulkReportDto.nrUpdatedFailure = 0;
+    bulkReportDto.importFailedoldids = [];
     bulkReportDto.importFailedoldids = [];
     bulkReportDto.username = username;
     let nrOfLongText= 1;
@@ -56,16 +59,23 @@ export class OldCeshtjetService implements OldCeshtjetServiceInterface {
       }
       const exists = await this.checkIfExists(oldCeshtje);
       if (!exists) {
-        const resultAded = this._oldCeshtjetRepository.create(oldCeshtje);
-        if (resultAded) {
+        const resultAdded = await this._oldCeshtjetRepository.create(oldCeshtje);
+        if (resultAdded) {
           bulkReportDto.nrImportedSuccess++;
         } else {
           bulkReportDto.nrImportedFailure++;
           bulkReportDto.importFailedoldids.push(oldCeshtje.oldid)
         }
       } else {
-        bulkReportDto.nrImportedFailure++;
-        bulkReportDto.importFailedoldids.push(oldCeshtje.oldid)
+        const findOldCeshtje = await this._oldCeshtjetRepository.findByCondition({oldid: oldCeshtje.oldid});
+
+        const resultAdded = await this._oldCeshtjetRepository.update(findOldCeshtje[0]);
+        if (resultAdded.affected > 0) {
+          bulkReportDto.nrUpdatedSuccess++;
+        } else {
+          bulkReportDto.nrUpdatedFailure++;
+          bulkReportDto.updateFailedoldids.push(oldCeshtje.oldid)
+        }
       }
     }
     return bulkReportDto;

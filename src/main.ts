@@ -6,7 +6,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: (process.env.NODE_ENV === 'development') ? ['debug'] : ['warn', 'error'],
+    // logger: (process.env.NODE_ENV === 'development') ? ['debug'] : ['warn', 'error'],
   });
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('api/v1');

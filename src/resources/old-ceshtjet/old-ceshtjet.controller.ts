@@ -44,7 +44,6 @@ export class OldCeshtjetController {
   @Get(':id')
   @ApiBearerAuth('access-token')
   // @Unprotected()
-  @Scopes('View')
   public async findOneById(@Param('id') id: string) {
     let result;
     try {
