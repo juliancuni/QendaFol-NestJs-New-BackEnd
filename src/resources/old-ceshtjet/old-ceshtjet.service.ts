@@ -51,11 +51,19 @@ export class OldCeshtjetService implements OldCeshtjetServiceInterface {
     bulkReportDto.importFailedoldids = [];
     bulkReportDto.importFailedoldids = [];
     bulkReportDto.username = username;
-    let nrOfLongText= 1;
-    for (const oldCeshtje of oldCeshtjet) {
-      if(oldCeshtje.policia && oldCeshtje.policia.length >= 2000) {
+    let nrOfLongText = 1;
+    for (let oldCeshtje of oldCeshtjet) {
+      let oldCeshtjeSplitNenet = {...oldCeshtje};
+      oldCeshtjeSplitNenet.neni_apeli = oldCeshtjeSplitNenet?.neni_apeli?.toString().split(";")
+      oldCeshtjeSplitNenet.neni_gjl = oldCeshtjeSplitNenet?.neni_gjl?.toString().split(";")
+      oldCeshtjeSplitNenet.neni_gjp = oldCeshtjeSplitNenet?.neni_gjp?.toString().split(";")
+      oldCeshtjeSplitNenet.neni_gjsh1 = oldCeshtjeSplitNenet?.neni_gjsh1?.toString().split(";")
+      oldCeshtjeSplitNenet.sipas_nenit = oldCeshtjeSplitNenet?.sipas_nenit?.toString().split(";")
+      oldCeshtjeSplitNenet.sipas_nenit_p = oldCeshtjeSplitNenet?.sipas_nenit_p?.toString().split(";")
+      oldCeshtje = {...oldCeshtje, ...oldCeshtjeSplitNenet };
+      if (oldCeshtje.policia && oldCeshtje.policia.length >= 2000) {
         console.log(nrOfLongText, oldCeshtje.oldid, oldCeshtje.policia.length);
-        nrOfLongText++; 
+        nrOfLongText++;
       }
       const exists = await this.checkIfExists(oldCeshtje);
       if (!exists) {
@@ -67,9 +75,9 @@ export class OldCeshtjetService implements OldCeshtjetServiceInterface {
           bulkReportDto.importFailedoldids.push(oldCeshtje.oldid)
         }
       } else {
-        const findOldCeshtje = await this._oldCeshtjetRepository.findByCondition({oldid: oldCeshtje.oldid});
-
-        const resultAdded = await this._oldCeshtjetRepository.update(findOldCeshtje[0]);
+        const findOldCeshtje = await this._oldCeshtjetRepository.findByCondition({ oldid: oldCeshtje.oldid });
+        const updateOldCeshtje = { ...findOldCeshtje[0], ...oldCeshtje }
+        const resultAdded = await this._oldCeshtjetRepository.update(updateOldCeshtje);
         if (resultAdded.affected > 0) {
           bulkReportDto.nrUpdatedSuccess++;
         } else {
