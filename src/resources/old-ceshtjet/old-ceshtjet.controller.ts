@@ -71,7 +71,7 @@ export class OldCeshtjetController {
   public async updateOne(
     @Body() oldCeshtje: OldCeshtjeDto,
   ): Promise<UpdateResult> {
-    return this._oldCeshtjetService.update(oldCeshtje as OldCeshtjeDto  );
+    return this._oldCeshtjetService.update(oldCeshtje as OldCeshtjeDto);
   }
   @Delete(':id')
   @ApiBearerAuth('access-token')
@@ -100,7 +100,7 @@ export class OldCeshtjetController {
     @Param('password') password: string,
   ) {
     const tokenUrl =
-      'http://localhost:8080/auth/realms/qendrafol/protocol/openid-connect/token';
+      process.env.KC_URL + '/realms/' + process.env.KC_REALM + '/protocol/openid-connect/token';
     const body = {
       client_id: 'qendrafol-webapp',
       username: username,
